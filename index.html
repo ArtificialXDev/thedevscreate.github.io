@@ -1,11 +1,430 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <title>Testing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevsCreate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f6f9;
+      --bg-accent: rgba(255, 255, 255, 0.5);
+      --text: #0b0d18;
+      --muted: #5a5e73;
+      --accent: #5d5fef;
+      --glow: rgba(93, 95, 239, 0.35);
+    }
+
+    [data-theme="dark"] {
+      --bg: #080914;
+      --bg-accent: rgba(11, 13, 24, 0.75);
+      --text: #f9fbff;
+      --muted: #b4b8d0;
+      --accent: #f7a76c;
+      --glow: rgba(247, 167, 108, 0.4);
+      
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .backdrop {
+      position: fixed;
+      width: 80vmax;
+      height: 80vmax;
+      background: radial-gradient(circle, var(--glow), transparent 70%);
+      filter: blur(80px);
+      opacity: 0.8;
+      animation: float 18s ease-in-out infinite alternate;
+    }
+
+    .container {
+      position: relative;
+      width: min(900px, 92vw);
+      padding: 3.5rem;
+      border-radius: 32px;
+      background: var(--bg-accent);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 80px rgba(3, 7, 18, 0.35);
+      -webkit-backdrop-filter: blur(30px) saturate(140%);
+      backdrop-filter: blur(30px) saturate(140%);
+      isolation: isolate;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 3rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo {
+      font-weight: 600;
+      font-size: 1.25rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .toggle {
+      border: none;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.35rem 0.55rem 0.35rem 0.9rem;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+      transition: transform 250ms ease, box-shadow 250ms ease;
+    }
+
+    .toggle:hover {
+      transform: translateY(-1px);
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+    }
+
+    .toggle-track {
+      width: 54px;
+      height: 28px;
+      border-radius: 999px;
+      background: linear-gradient(120deg, var(--accent), var(--glow));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toggle-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg);
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      display: grid;
+      place-items: center;
+      font-size: 0.9rem;
+      transition: transform 300ms cubic-bezier(0.4, 0.17, 0.15, 1.4), rotate 500ms ease;
+      box-shadow: 0 10px 30px rgba(15, 15, 35, 0.25);
+    }
+
+    [data-theme="dark"] .toggle-thumb {
+      transform: translateX(26px) rotate(360deg);
+    }
+
+    .content {
+      display: grid;
+      gap: 2.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(2.7rem, 4vw, 4.1rem);
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-text p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 480px;
+    }
+
+    .card {
+      padding: 1.5rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+    }
+
+    .card + .card {
+      margin-top: 1.2rem;
+    }
+
+    .hero-actions {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .goo-btn {
+      position: relative;
+      border: none;
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 600;
+      padding: 0.85rem 1.9rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+      box-shadow: 0 20px 40px rgba(93, 95, 239, 0.35);
+      transition: transform 250ms ease, box-shadow 250ms ease;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    [data-theme="dark"] .goo-btn {
+      box-shadow: 0 20px 50px rgba(247, 167, 108, 0.35);
+    }
+
+    .goo-btn::before,
+    .goo-btn::after {
+      content: "";
+      position: absolute;
+      width: 140%;
+      height: 140%;
+      top: 50%;
+      left: 50%;
+      translate: -50% -50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.35), transparent 60%);
+      filter: blur(18px);
+      opacity: 0.7;
+      animation: goo-drift 6s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    .goo-btn::after {
+      animation-duration: 4s;
+      animation-direction: reverse;
+    }
+
+    .goo-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 25px 55px rgba(93, 95, 239, 0.45);
+    }
+
+    [data-theme="dark"] .goo-btn:hover {
+      box-shadow: 0 25px 55px rgba(247, 167, 108, 0.45);
+    }
+
+    .hero-actions span {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .swatches {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+    }
+
+    .swatch {
+      flex: 1;
+      height: 90px;
+      border-radius: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .swatch span {
+      position: absolute;
+      bottom: 0.8rem;
+      left: 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .swatch.light {
+      background: linear-gradient(135deg, #f6f6f9, #d3def8);
+      color: #0b0d18;
+    }
+
+    .swatch.dark {
+      background: linear-gradient(135deg, #070a1a, #1b1f3a);
+      color: #f9fbff;
+    }
+
+    .illustration {
+      position: relative;
+      height: 320px;
+      border-radius: 24px;
+      background: radial-gradient(circle at top, rgba(255, 255, 255, 0.4), transparent),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.08));
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+    }
+
+    .orbit {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 255, 255, 0.3);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: orbit 24s linear infinite;
+    }
+
+    .planet {
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff1d0, #f0b67f);
+      top: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.35);
+    }
+
+    .stars {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.9), transparent),
+        radial-gradient(2px 2px at 80% 70%, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(1px 1px at 60% 40%, rgba(255, 255, 255, 0.6), transparent);
+      opacity: 0;
+      transition: opacity 800ms ease;
+    }
+
+    [data-theme="dark"] .stars {
+      opacity: 0.9;
+    }
+
+    .sunrise {
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 140%;
+      height: 80%;
+      background: radial-gradient(circle at 50% 20%, rgba(255, 214, 164, 0.7), transparent 60%);
+      transition: transform 800ms ease, opacity 800ms ease;
+    }
+
+    [data-theme="dark"] .sunrise {
+      transform: translateY(40%);
+      opacity: 0.2;
+    }
+
+    @keyframes float {
+      from {
+        transform: translate(-10%, -5%) scale(1);
+      }
+      to {
+        transform: translate(5%, 10%) scale(1.1);
+      }
+    }
+
+    @keyframes orbit {
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    @keyframes goo-drift {
+      0% {
+        transform: scale(1) translate(-10%, -8%);
+      }
+      50% {
+        transform: scale(1.08) translate(6%, 5%);
+      }
+      100% {
+        transform: scale(1) translate(-10%, -8%);
+      }
+    }
+  </style>
 </head>
 <body>
-  <p>testing 123</p><br/>
-  <p>alex was here</p>
+  <div class="backdrop" aria-hidden="true"></div>
+  <div class="container">
+    <header>
+      <div class="logo">DevsCreate</div>
+      <button class="toggle" id="theme-toggle" type="button" aria-pressed="false">
+        <span>Light</span>
+        <div class="toggle-track">
+          <div class="toggle-thumb" aria-hidden="true">☀️</div>
+        </div>
+      </button>
+    </header>
+
+    <section class="content">
+      <div class="hero-text">
+        <h1>A discord server for developers, not like any other!</h1>
+        <p>We are a community of developers who are passionate about learning and sharing our knowledge with others.</p>
+        <div class="card">
+          <p><strong>Diverse</strong></p>
+          <p>We have a variety of channels for different languages and frameworks.</p>
+        </div>
+        <div class="card">
+          <p><strong>Helpful</strong></p>
+          <p>We are always here to help you with your projects and questions.</p>
+        </div>
+        <div class="hero-actions">
+          <button class="goo-btn" type="button" onclick="window.location.href='https://discord.gg/devscreate'"  >Join the server</button>
+          <span>Over idk devs online right now</span>
+        </div>
+      </div>
+
+      <div class="illustration">
+        <div class="stars"></div>
+        <div class="sunrise"></div>
+        <div class="orbit">
+          <div class="planet"></div>
+        </div>
+        <div class="swatches">
+          <div class="swatch light">
+            <span>Daylight</span>
+          </div>
+          <div class="swatch dark">
+            <span>Midnight</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const root = document.documentElement;
+    const toggle = document.getElementById('theme-toggle');
+    const thumb = toggle.querySelector('.toggle-thumb');
+    const label = toggle.querySelector('span');
+
+    const setTheme = mode => {
+      root.setAttribute('data-theme', mode);
+      const isDark = mode === 'dark';
+      toggle.setAttribute('aria-pressed', isDark);
+      thumb.textContent = isDark ? '🌙' : '☀️';
+      label.textContent = isDark ? 'Dark' : 'Light';
+      localStorage.setItem('lumen-theme', mode);
+    };
+
+    const stored = localStorage.getItem('lumen-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(stored || (prefersDark ? 'dark' : 'light'));
+
+    toggle.addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      setTheme(next);
+    });
+  </script>
 </body>
 </html>
